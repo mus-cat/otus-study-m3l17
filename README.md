@@ -1,6 +1,6 @@
 # Практика с SELinux
 
-## Запустить nginx на нестандартном порту 3-мя разными способами
+## Задание № 1. Запустить nginx на нестандартном порту 3-мя разными способами
 ### Начало
 Смотрим состояние SELinux и firewalld. 
 ```
@@ -24,7 +24,8 @@ Max kernel policy version:      31
 Устанавили nginx и проверили его работоспособность на порту 80.  
 Меняем порт для nginx на 8888.  
 Меняем порт и перезапускаем  
-[Pic]
+!["Меняем порт для Nginx"](https://github.com/mus-cat/otus-study-m3l17/blob/main/I/ChangeNginxPort.png)
+
 ```
 [root@nginx01 ~]# systemctl restart nginx
 Job for nginx.service failed because the control process exited with error code. See "systemctl status nginx.service" and "journalctl -xe" for details.
@@ -56,7 +57,7 @@ type=AVC msg=audit(1678267817.638:562): avc:  denied  { name_bind } for  pid=233
 [root@nginx01 ~]# setsebool nis_enabled on
 ```
 Пытаемся запустить nginx. И о чудо, все работает!
-[Pic]
+!["SELinux & setsebool"](https://github.com/mus-cat/otus-study-m3l17/blob/main/I/StartNginx_Use_setsebool.png)
 Возвращаем переменную в исходное состояние и пытаемся перезапустить сервис... Не работает...
 
 ### Подход с добавлением используемого нами порта в список разрещенных для сервиса.
@@ -66,7 +67,7 @@ type=AVC msg=audit(1678267817.638:562): avc:  denied  { name_bind } for  pid=233
 http_port_t                    tcp      8888, 80, 81, 443, 488, 8008, 8009, 8443, 9000
 ```
 Пробуем запустить nginx. И все работает!
-[Pic]
+!["Add port"](https://github.com/mus-cat/otus-study-m3l17/blob/main/I/StartNginx_Use_openport.png)
 
 Возвращаем контекст http_port_t в исходное состояние
 ```
@@ -89,7 +90,7 @@ semodule -i nginx.pp
 [root@nginx01 ~]# semodule -i nginx.pp
 ```
 пытаемся перезапустить сервис nginx и проверяем, что он работает.
-[Pic]
+!["Make module"](https://github.com/mus-cat/otus-study-m3l17/blob/main/I/StartNginx_Use_audit2allow.png)
  
 #### Замечание. Выполняем команду
 ```
@@ -119,7 +120,7 @@ unreserved_port_t              udp      61001-65535, 1024-32767
 
 Видно, что результат "шире" чем нам необходимо, т.е. при использовании созданного программой модля, **nginx** может выполнять bind на большую группу портов, чем нам было необходимо.
 
-## Обеспечить работоспособность приложения при включенном selinux
+## Задание № 2. Обеспечить работоспособность приложения при включенном selinux
 
 ### Диагностика проблемы
 
@@ -185,8 +186,12 @@ drw-rwx---. root named unconfined_u:object_r:etc_t:s0   /etc/named/dynamic/
 [root@ns01 ~]# chcon -t named_cache_t /etc/named/dynamic
 ```
 
-Пробуем..
-[Pic]
+Пробуем..  
+На клиенте получаем:  
+!["Success dns update"](https://github.com/mus-cat/otus-study-m3l17/blob/main/II/SuccessUpdate_1.png)
+!["Correct DNS answer"](https://github.com/mus-cat/otus-study-m3l17/blob/main/II/SuccessDNSServerAnswer_1.png)
+На сервере:  
+!["Видим на сервере"](https://github.com/mus-cat/otus-study-m3l17/blob/main/II/OnServerSide_1.png)
 
 Внесены изменениея в исходный файлы **playbook.yml** используемый для создания стенда, добавлено назначение контекство SELinux на нужные объекты файловой системы.
 
