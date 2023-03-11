@@ -1,4 +1,9 @@
 # Практика с SELinux
+## Задание выполнялось с использованием VirtualBox 6.1.40, применялся vagrant с box-образом centos/7
+
+### Файлы и папки в репозитории:
+- **Vagrantfile** - параметры для создания ВМ с сервером и клиентом с помощью **vagrant**
+- **provisioning** - папка содержащая Playbook файл (и необходимын для него файлы), обеспечивающий настройку работу сервера и клиента
 
 ## Задание № 1. Запустить nginx на нестандартном порту 3-мя разными способами
 ### Начало
@@ -188,8 +193,9 @@ drw-rwx---. root named unconfined_u:object_r:etc_t:s0   /etc/named/dynamic/
 
 Пробуем..  
 На клиенте получаем:  
-!["Success dns update"](https://github.com/mus-cat/otus-study-m3l17/blob/main/II/SuccessUpdate_1.png)
-!["Correct DNS answer"](https://github.com/mus-cat/otus-study-m3l17/blob/main/II/SuccessDNSServerAnswer_1.png)
+!["Success dns update"](https://github.com/mus-cat/otus-study-m3l17/blob/main/II/SuccessUpdate_1.png)  
+!["Correct DNS answer"](https://github.com/mus-cat/otus-study-m3l17/blob/main/II/SuccessDNSServerAnswer_1.png)  
+
 На сервере:  
 !["Видим на сервере"](https://github.com/mus-cat/otus-study-m3l17/blob/main/II/OnServerSide_1.png)
 
